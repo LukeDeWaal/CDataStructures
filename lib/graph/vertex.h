@@ -19,13 +19,12 @@
 struct Edge_s {
     Vertex_t *v1;
     Vertex_t *v2;
-    DataUnion_t weight;
-    DATATYPE dtype;
+    Data_t weight;
 };
 
 struct DirectionalEdge_s{
-    Vertex_t *source;
     Vertex_t *target;
+    Data_t weight;
 };
 
 struct Vertex_s {

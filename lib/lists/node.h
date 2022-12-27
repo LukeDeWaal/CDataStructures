@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "../map.h"
 #include "defines.h"
 #include "../datatypes.h"
 
@@ -36,29 +37,14 @@ struct ListNode_double_s {
 NODE_GEN_DCL_GENERIC(ListNode_s_t, create_node_s);
 NODE_GEN_DCL_GENERIC(ListNode_d_t, create_node_d);
 
-NODE_GEN_DCL(ListNode_s_t, void*,       ptr,    create_node_s);
-NODE_GEN_DCL(ListNode_s_t, uint8_t,     u8,     create_node_s);
-NODE_GEN_DCL(ListNode_s_t, int8_t,      i8,     create_node_s);
-NODE_GEN_DCL(ListNode_s_t, uint16_t,    i16,    create_node_s);
-NODE_GEN_DCL(ListNode_s_t, int16_t,     u16,    create_node_s);
-NODE_GEN_DCL(ListNode_s_t, uint32_t,    u32,    create_node_s);
-NODE_GEN_DCL(ListNode_s_t, int32_t,     i32,    create_node_s);
-NODE_GEN_DCL(ListNode_s_t, uint64_t,    u64,    create_node_s);
-NODE_GEN_DCL(ListNode_s_t, int64_t,     i64,    create_node_s);
-NODE_GEN_DCL(ListNode_s_t, float,       f32,    create_node_s);
-NODE_GEN_DCL(ListNode_s_t, double,      f64,    create_node_s);
+#define SNODE_GEN_DCL_GENERATOR(type, tag) \
+    NODE_GEN_DCL(ListNode_s_t, type, tag, create_node_s);
 
-NODE_GEN_DCL(ListNode_d_t, void*,       ptr,    create_node_d);
-NODE_GEN_DCL(ListNode_d_t, uint8_t,     u8,     create_node_d);
-NODE_GEN_DCL(ListNode_d_t, int8_t,      i8,     create_node_d);
-NODE_GEN_DCL(ListNode_d_t, uint16_t,    i16,    create_node_d);
-NODE_GEN_DCL(ListNode_d_t, int16_t,     u16,    create_node_d);
-NODE_GEN_DCL(ListNode_d_t, uint32_t,    u32,    create_node_d);
-NODE_GEN_DCL(ListNode_d_t, int32_t,     i32,    create_node_d);
-NODE_GEN_DCL(ListNode_d_t, uint64_t,    u64,    create_node_d);
-NODE_GEN_DCL(ListNode_d_t, int64_t,     i64,    create_node_d);
-NODE_GEN_DCL(ListNode_d_t, float,       f32,    create_node_d);
-NODE_GEN_DCL(ListNode_d_t, double,      f64,    create_node_d);
+#define DNODE_GEN_DCL_GENERATOR(type, tag) \
+    NODE_GEN_DCL(ListNode_d_t, type, tag, create_node_d);
+
+MAP_TUPLES(SNODE_GEN_DCL_GENERATOR, PAIRS);
+MAP_TUPLES(DNODE_GEN_DCL_GENERATOR, PAIRS);
 
 NODE_DSTR_DCL(ListNode_s_t, destroy_node_s);
 NODE_DSTR_DCL(ListNode_d_t, destroy_node_d);
