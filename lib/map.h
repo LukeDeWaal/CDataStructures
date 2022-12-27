@@ -1,6 +1,16 @@
-//
-// Created by luker on 27/12/2022.
-//
+/*
+ * Created by William Swanson in 2012.
+ *
+ * I, William Swanson, dedicate this work to the public domain.
+ * I waive all rights to the work worldwide under copyright law,
+ * including all related and neighboring rights,
+ * to the extent allowed by law.
+ *
+ * You can copy, modify, distribute and perform the work,
+ * even for commercial purposes, all without asking permission.
+ *
+ * Link: https://github.com/swansontec/map-macro/blob/master/map.h
+ */
 
 #ifndef MAP_H_INCLUDED
 #define MAP_H_INCLUDED
