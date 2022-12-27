@@ -1,0 +1,8 @@
+C:/Users/luker/CLionProjects/DataStructures/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/luker/CLionProjects/DataStructures/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/luker/CLionProjects/DataStructures/cmake-build-debug/lib/CMakeFiles/DS_lib.dir
+C:/Users/luker/CLionProjects/DataStructures/cmake-build-debug/lib/CMakeFiles/edit_cache.dir
+C:/Users/luker/CLionProjects/DataStructures/cmake-build-debug/lib/CMakeFiles/rebuild_cache.dir
+C:/Users/luker/CLionProjects/DataStructures/cmake-build-debug/test/CMakeFiles/DS_test.dir
+C:/Users/luker/CLionProjects/DataStructures/cmake-build-debug/test/CMakeFiles/edit_cache.dir
+C:/Users/luker/CLionProjects/DataStructures/cmake-build-debug/test/CMakeFiles/rebuild_cache.dir
