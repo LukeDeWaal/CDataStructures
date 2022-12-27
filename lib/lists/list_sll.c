@@ -4,29 +4,31 @@
 
 #include "list_sll.h"
 
-#define SLL_APPEND_SRC(fname, datatype, dtype_code) LIST_APPEND_DCL(SLL_t, fname, datatype, dtype_code){ \
+#define SLL_APPEND_GENERIC_SRC(fname) LIST_APPEND_GENERIC_DCL(SLL_t, fname){ \
     if((*list)->len == 0){                                                                                  \
-       (*list)->head = create_node_s_##dtype_code (data);                                                  \
+       (*list)->head = create_node_s(data);                                                  \
        (*list)->head->next = (*list)->tail;                                                                    \
     } else if((*list)->len == 1){                                                                           \
-       (*list)->tail = create_node_s_##dtype_code (data);                                                \
+       (*list)->tail = create_node_s(data);                                                \
        (*list)->head->next = (*list)->tail;                                                                                                      \
     } else {                                                                                             \
-       (*list)->tail->next = create_node_s_##dtype_code (data);                                            \
+       (*list)->tail->next = create_node_s(data);                                            \
        (*list)->tail = (*list)->tail->next;                                                                    \
     }                                                                                                    \
-    (*list)->len += 1;                                                                                      \
-};
+    (*list)->len += 1;                                                                                       \
+}
 
-#define SLL_INSERT_SRC(fname, datatype, dtype_code) LIST_INSERT_DCL(SLL_t, fname, datatype, dtype_code){ \
+
+
+#define SLL_INSERT_GENERIC_SRC(fname) LIST_INSERT_GENERIC_DCL(SLL_t, fname){ \
     LIST_BOUNDS_CHECK((*list), index, 255);                                                                \
     if(index == (*list)->len){                                                                                      \
-        sll_append_##dtype_code (list, data);                                                                  \
+        sll_append (list, data);                                                                  \
         return; \
     }                                                                                                    \
     ListNode_s_t* curr = (*list)->head;                                                                  \
     ListNode_s_t* prev = NULL;                                                                                                     \
-    ListNode_s_t* newnode = create_node_s_##dtype_code (data);                                            \
+    ListNode_s_t* newnode = create_node_s (data);                                            \
     if(index == 0){                                                                                      \
         newnode->next = (*list)->head;                                                                   \
         (*list)->head = newnode;                                                                         \
@@ -40,11 +42,12 @@
         newnode->next = curr;                                                                            \
         prev->next = newnode;                                                                            \
     }                                                                                                    \
-    (*list)->len++;                                                                                                         \
+    (*list)->len++;                                                                                      \
 }
 
 #define SLL_POP_SRC(fname) LIST_POP_DCL(SLL_t, fname, s){ \
     LIST_BOUNDS_CHECK((*list), index, 255);                  \
+    Data_t result;                                                      \
     ListNode_s_t* curr = (*list)->head;                                                                  \
     ListNode_s_t* prev = NULL;                               \
                                                              \
@@ -63,8 +66,11 @@
         }                                                  \
     }                                                        \
     (*list)->len--;                                       \
-    curr->next = NULL;                                                      \
-    return curr;\
+    curr->next = NULL;                                    \
+    result.value = curr->data.value;                             \
+    result.dtype = curr->data.dtype;\
+    destroy_node_s(&curr, NULL);\
+    return result;\
 }
 
 LIST_GEN_SRC(SLL_t, create_sll);
@@ -73,31 +79,22 @@ LIST_PRINT_SRC(SLL_t, print_sll, s);
 LIST_APPLY_SRC(SLL_t, apply_sll, s);
 LIST_INDEX_SRC(SLL_t , index_sll, s);
 LIST_POP_DCL(SLL_t, pop_sll, s);
-
 SLL_POP_SRC(pop_sll);
 
-SLL_APPEND_SRC(sll_append, void*,    ptr);
-SLL_APPEND_SRC(sll_append, uint8_t,  u8);
-SLL_APPEND_SRC(sll_append, int8_t,   i8);
-SLL_APPEND_SRC(sll_append, uint16_t, u16);
-SLL_APPEND_SRC(sll_append, int16_t,  i16);
-SLL_APPEND_SRC(sll_append, uint32_t, u32);
-SLL_APPEND_SRC(sll_append, int32_t,  i32);
-SLL_APPEND_SRC(sll_append, uint64_t, u64);
-SLL_APPEND_SRC(sll_append, int64_t,  i64);
-SLL_APPEND_SRC(sll_append, float,    f32);
-SLL_APPEND_SRC(sll_append, double,   f64);
+SLL_APPEND_GENERIC_SRC(sll_append);
+SLL_INSERT_GENERIC_SRC(sll_insert);
 
-SLL_INSERT_SRC(sll_insert, void*,    ptr);
-SLL_INSERT_SRC(sll_insert, uint8_t,  u8);
-SLL_INSERT_SRC(sll_insert, int8_t,   i8);
-SLL_INSERT_SRC(sll_insert, uint16_t, u16);
-SLL_INSERT_SRC(sll_insert, int16_t,  i16);
-SLL_INSERT_SRC(sll_insert, uint32_t, u32);
-SLL_INSERT_SRC(sll_insert, int32_t,  i32);
-SLL_INSERT_SRC(sll_insert, uint64_t, u64);
-SLL_INSERT_SRC(sll_insert, int64_t,  i64);
-SLL_INSERT_SRC(sll_insert, float,    f32);
-SLL_INSERT_SRC(sll_insert, double,   f64);
+#define SLL_APPEND_SRC_GENERATOR(type, tag) \
+    LIST_APPEND_SRC(SLL_t, sll_append, type, tag)
+
+#define SLL_INSERT_SRC_GENERATOR(type, tag) \
+    LIST_INSERT_SRC(SLL_t, sll_insert, type, tag)
+
+MAP_TUPLES(SLL_APPEND_SRC_GENERATOR, PAIRS);
+MAP_TUPLES(SLL_INSERT_SRC_GENERATOR, PAIRS);
+
+
+
+
 
 

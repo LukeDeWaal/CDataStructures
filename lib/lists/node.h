@@ -11,29 +11,30 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "defines.h"
 #include "../datatypes.h"
 
-typedef struct ListNode_single_s ListNode_s_t;
-typedef struct ListNode_double_s ListNode_d_t;
-
 struct ListNode_single_s {
-    DataUnion_t data;
-    DATATYPE dtype;
+    Data_t data;
     ListNode_s_t* next;
 };
 
 struct ListNode_double_s {
-    DataUnion_t data;
-    DATATYPE dtype;
+    Data_t data;
     ListNode_d_t* prev;
     ListNode_d_t* next;
 };
+
+#define NODE_GEN_DCL_GENERIC(ntype, fname) ntype* fname (Data_t data)
 
 #define NODE_GEN_DCL(ntype, datatype, dtype_code, fname) ntype* fname##_##dtype_code (datatype data)
 
 #define NODE_DSTR_DCL(ntype, fname) void fname (ntype** node, void (*destructor)(void* arg))
 
 #define NODE_PRINT_DCL(ntype, fname) void fname (ntype* node)
+
+NODE_GEN_DCL_GENERIC(ListNode_s_t, create_node_s);
+NODE_GEN_DCL_GENERIC(ListNode_d_t, create_node_d);
 
 NODE_GEN_DCL(ListNode_s_t, void*,       ptr,    create_node_s);
 NODE_GEN_DCL(ListNode_s_t, uint8_t,     u8,     create_node_s);

@@ -30,17 +30,21 @@ void freeing_destructor(void* arg);
 
 #define LIST_DSTR_DCL(ltype, fname) void fname (ltype** list, void (*destructor)(void* arg))
 
+#define LIST_APPEND_GENERIC_DCL(ltype, fname) void fname (ltype** list, Data_t data)
+
 #define LIST_APPEND_DCL(ltype, fname, datatype, dtype_code) void fname##_##dtype_code (ltype** list, datatype data)
+
+#define LIST_INSERT_GENERIC_DCL(ltype, fname) void fname (ltype** list, Data_t data, uint64_t index)
 
 #define LIST_INSERT_DCL(ltype, fname, datatype, dtype_code) void fname##_##dtype_code (ltype** list, datatype data, uint64_t index)
 
 #define LIST_PRINT_DCL(ltype, fname) void fname (ltype* list, char* sep)
 
-#define LIST_APPLY_DCL(ltype, fname) void fname (ltype* list, void (*function)(DataUnion_t* arg, DATATYPE dtype))
+#define LIST_APPLY_DCL(ltype, fname) void fname (ltype* list, void (*function)(Data_t* arg))
 
 #define LIST_INDEX_DCL(ltype, fname, ntag) ListNode_##ntag##_t* fname (ltype* list, uint64_t index)
 
-#define LIST_POP_DCL(ltype, fname, ntag) ListNode_##ntag##_t* fname (ltype** list, uint64_t index)
+#define LIST_POP_DCL(ltype, fname, ntag) Data_t fname (ltype** list, uint64_t index)
 
 #define LIST_GEN_SRC(ltype, fname) LIST_GEN_DCL(ltype, fname){ \
     ltype* result = (ltype*)malloc(sizeof(ltype));             \
@@ -59,6 +63,16 @@ void freeing_destructor(void* arg);
         (*list)->len -= 1;                                              \
     }                                                                  \
     free(*list);\
+};
+
+#define LIST_APPEND_SRC(ltype, fname, datatype, dtype_code) LIST_APPEND_DCL(ltype, fname, datatype, dtype_code){ \
+    ASSIGN_DATA(arg, data, dtype_code)                                                                               \
+    fname (list, arg);\
+};
+
+#define LIST_INSERT_SRC(ltype, fname, datatype, dtype_code) LIST_INSERT_DCL(ltype, fname, datatype, dtype_code){ \
+    ASSIGN_DATA(arg, data, dtype_code)                                                                               \
+    fname (list, arg, index);\
 };
 
 #define LIST_PRINT_SRC(ltype, fname, ntag) LIST_PRINT_DCL(ltype, fname){ \
@@ -82,7 +96,7 @@ void freeing_destructor(void* arg);
     uint64_t count = 0;                                                                     \
     ListNode_##ntag##_t* curr = list->head;                              \
     while(count < list->len){                                      \
-        function(&curr->data, curr->dtype);                          \
+        function(&curr->data);                          \
         curr = curr->next;                                          \
         count++;                                                    \
     }                                                                    \

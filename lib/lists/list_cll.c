@@ -5,13 +5,13 @@
 #include "list_cll.h"
 
 
-#define CLL_APPEND_SRC(fname, datatype, dtype_code) LIST_APPEND_DCL(CLL_t, fname, datatype, dtype_code){ \
+#define CLL_APPEND_GENERIC_SRC(fname)  LIST_APPEND_GENERIC_DCL(CLL_t, fname){ \
     if((*list)->len == 0){                                                                                  \
-       (*list)->head = create_node_d_##dtype_code (data);                                                \
+       (*list)->head = create_node_d (data);                                                \
        (*list)->head->next = (*list)->head;                                                              \
        (*list)->head->prev = (*list)->head;                                                             \
     } else {                                                                                             \
-       ListNode_d_t* newnode = create_node_d_##dtype_code (data);                                         \
+       ListNode_d_t* newnode = create_node_d (data);                                         \
        newnode->next = (*list)->head;                                                                       \
        newnode->prev = (*list)->head->prev;                                                                 \
        (*list)->head->prev->next = newnode;                                                                                                                                                                   \
@@ -20,15 +20,15 @@
     (*list)->len += 1;                                                                                      \
 };
 
-#define CLL_INSERT_SRC(fname, datatype, dtype_code) LIST_INSERT_DCL(CLL_t, fname, datatype, dtype_code){ \
+#define CLL_INSERT_GENERIC_SRC(fname) LIST_INSERT_GENERIC_DCL(CLL_t, fname){ \
     LIST_BOUNDS_CHECK((*list), index, 255);                                                                \
     if(index == (*list)->len){                                                                                      \
-        cll_append_##dtype_code (list, data);                                                                  \
+        cll_append (list, data);                                                                  \
         return; \
     }                                                                                                    \
     ListNode_d_t* curr = NULL;                                                                  \
     ListNode_d_t* prev = NULL;                                                                                                     \
-    ListNode_d_t* newnode = create_node_d_##dtype_code (data);                                            \
+    ListNode_d_t* newnode = create_node_d (data);                                            \
     if(index == 0){                                                                                      \
         newnode->next = (*list)->head;                                                                   \
         newnode->prev = (*list)->head->prev;                                                                                                 \
@@ -67,6 +67,7 @@
 
 #define CLL_POP_SRC(fname) LIST_POP_DCL(CLL_t, fname, d){ \
     LIST_BOUNDS_CHECK((*list), index, 255);                  \
+    Data_t result;                                                      \
     ListNode_d_t* curr = (*list)->head;                                                                  \
     ListNode_d_t* prev = NULL;                               \
                                                              \
@@ -86,8 +87,11 @@
     }                                                        \
     (*list)->len--;                                       \
     curr->next = NULL;                                    \
-    curr->prev = NULL; \
-    return curr;\
+    curr->prev = NULL;                                    \
+    result.value = curr->data.value;                             \
+    result.dtype = curr->data.dtype;\
+    destroy_node_d(&curr, NULL);                                                      \
+    return result;\
 }
 
 LIST_GEN_SRC(CLL_t, create_cll);
@@ -98,26 +102,14 @@ LIST_INDEX_SRC(CLL_t , index_cll, d);
 
 CLL_POP_SRC(pop_cll);
 
-CLL_APPEND_SRC(cll_append, void*,    ptr);
-CLL_APPEND_SRC(cll_append, uint8_t,  u8);
-CLL_APPEND_SRC(cll_append, int8_t,   i8);
-CLL_APPEND_SRC(cll_append, uint16_t, u16);
-CLL_APPEND_SRC(cll_append, int16_t,  i16);
-CLL_APPEND_SRC(cll_append, uint32_t, u32);
-CLL_APPEND_SRC(cll_append, int32_t,  i32);
-CLL_APPEND_SRC(cll_append, uint64_t, u64);
-CLL_APPEND_SRC(cll_append, int64_t,  i64);
-CLL_APPEND_SRC(cll_append, float,    f32);
-CLL_APPEND_SRC(cll_append, double,   f64);
+CLL_APPEND_GENERIC_SRC(cll_append);
+CLL_INSERT_GENERIC_SRC(cll_insert);
 
-CLL_INSERT_SRC(cll_insert, void*,    ptr);
-CLL_INSERT_SRC(cll_insert, uint8_t,  u8);
-CLL_INSERT_SRC(cll_insert, int8_t,   i8);
-CLL_INSERT_SRC(cll_insert, uint16_t, u16);
-CLL_INSERT_SRC(cll_insert, int16_t,  i16);
-CLL_INSERT_SRC(cll_insert, uint32_t, u32);
-CLL_INSERT_SRC(cll_insert, int32_t,  i32);
-CLL_INSERT_SRC(cll_insert, uint64_t, u64);
-CLL_INSERT_SRC(cll_insert, int64_t,  i64);
-CLL_INSERT_SRC(cll_insert, float,    f32);
-CLL_INSERT_SRC(cll_insert, double,   f64);
+#define CLL_APPEND_SRC_GENERATOR(type, tag) \
+    LIST_APPEND_SRC(CLL_t, cll_append, type, tag)
+
+#define CLL_INSERT_SRC_GENERATOR(type, tag) \
+    LIST_INSERT_SRC(CLL_t, cll_insert, type, tag)
+
+MAP_TUPLES(CLL_APPEND_SRC_GENERATOR, PAIRS);
+MAP_TUPLES(CLL_INSERT_SRC_GENERATOR, PAIRS);

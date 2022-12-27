@@ -12,6 +12,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "../map.h"
 #include "../datatypes.h"
 #include "node.h"
 #include "list_helpers.h"
@@ -29,29 +30,16 @@ LIST_DSTR_DCL(CLL_t, destroy_cll);
 LIST_INDEX_DCL(CLL_t , index_cll, d);
 LIST_POP_DCL(CLL_t, pop_cll, d);
 
-LIST_APPEND_DCL(CLL_t , cll_append, void*,    ptr);
-LIST_APPEND_DCL(CLL_t , cll_append, uint8_t,  u8);
-LIST_APPEND_DCL(CLL_t , cll_append, int8_t,   i8);
-LIST_APPEND_DCL(CLL_t , cll_append, uint16_t, u16);
-LIST_APPEND_DCL(CLL_t , cll_append, int16_t,  i16);
-LIST_APPEND_DCL(CLL_t , cll_append, uint32_t, u32);
-LIST_APPEND_DCL(CLL_t , cll_append, int32_t,  i32);
-LIST_APPEND_DCL(CLL_t , cll_append, uint64_t, u64);
-LIST_APPEND_DCL(CLL_t , cll_append, int64_t,  i64);
-LIST_APPEND_DCL(CLL_t , cll_append, float,    f32);
-LIST_APPEND_DCL(CLL_t , cll_append, double,   f64);
+LIST_APPEND_GENERIC_DCL(CLL_t , cll_append);
+LIST_INSERT_GENERIC_DCL(CLL_t , cll_insert);
 
-LIST_INSERT_DCL(CLL_t , cll_insert, void*,    ptr);
-LIST_INSERT_DCL(CLL_t , cll_insert, uint8_t,  u8);
-LIST_INSERT_DCL(CLL_t , cll_insert, int8_t,   i8);
-LIST_INSERT_DCL(CLL_t , cll_insert, uint16_t, u16);
-LIST_INSERT_DCL(CLL_t , cll_insert, int16_t,  i16);
-LIST_INSERT_DCL(CLL_t , cll_insert, uint32_t, u32);
-LIST_INSERT_DCL(CLL_t , cll_insert, int32_t,  i32);
-LIST_INSERT_DCL(CLL_t , cll_insert, uint64_t, u64);
-LIST_INSERT_DCL(CLL_t , cll_insert, int64_t,  i64);
-LIST_INSERT_DCL(CLL_t , cll_insert, float,    f32);
-LIST_INSERT_DCL(CLL_t , cll_insert, double,   f64);
+#define CLL_APPEND_DCL_GENERATOR(type, tag) \
+    LIST_APPEND_DCL(CLL_t, cll_append, type, tag);
 
+#define CLL_INSERT_DCL_GENERATOR(type, tag) \
+    LIST_INSERT_DCL(CLL_t, cll_insert, type, tag);
+
+MAP_TUPLES(CLL_APPEND_DCL_GENERATOR, PAIRS);
+MAP_TUPLES(CLL_INSERT_DCL_GENERATOR, PAIRS);
 
 #endif //DS_MAIN_LIST_CLL_H
