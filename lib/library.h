@@ -1,0 +1,6 @@
+#ifndef DATASTRUCTURES_LIBRARY_H
+#define DATASTRUCTURES_LIBRARY_H
+
+#include "lists/lists.h"
+
+#endif //DATASTRUCTURES_LIBRARY_H
